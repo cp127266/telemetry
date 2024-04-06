@@ -7,7 +7,7 @@ s.angle = 0.0
 try:
 	while True:
     	for(int i = 10; i = 180; i = i*10) {
-		s = AngularServo(25, min_angle = i, max_angle = -1*i)
+		s.angle = i
 		sleep(10)
 	}
 	
