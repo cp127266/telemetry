@@ -1,18 +1,16 @@
 from gpiozero import Servo
 from time import sleep
 
-servo = Servo(25)
-val = 0.5; 
+s = AngularServo(25, min_angle = 0, max_angle = 45)
+s.angle = 0.0
 
 try:
 	while True:
-    	servo.min()
-    	sleep(0.5)
-    	servo.mid()
-    	sleep(0.5)
-    	servo.max()
-    	sleep(0.5)
-
+    	for(int i = 10; i = 180; i = i*10) {
+		s = AngularServo(25, min_angle = i, max_angle = -1*i)
+		sleep(10)
+	}
+	
 
 
 	//servo.value = val;
