@@ -23,58 +23,62 @@ import os
 import sys
 
 
-RAD_TO_DEG = 57.29578
-M_PI = 3.14159265358979323846
-G_GAIN = 0.070  # [deg/s/LSB]  If you change the dps for gyro, you need to update this value accordingly
-AA =  0.40      # Complementary filter constant
+def getHeading(msg = False):
+    """Gets the heading angle for the compass.
 
-################# Compass Calibration values ############
-# Use calibrateBerryIMU.py to get calibration values
-# Calibrating the compass isnt mandatory, however a calibrated
-# compass will result in a more accurate heading values.
+        params
+        ------
+        msg : boolean
+            If true then print out info on acceleration, gyro, CF angle, heading. If false do not print these items.
+    """
 
-magXmin =  0
-magYmin =  0
-magZmin =  0
-magXmax =  0
-magYmax =  0
-magZmax =  0
-
-
-
-'''
-Here is an example:
-magXmin =  -1748
-magYmin =  -1025
-magZmin =  -1876
-magXmax =  959
-magYmax =  1651
-magZmax =  708
-Dont use the above values, these are just an example.
-'''
-############### END Calibration offsets #################
-
-
-
-gyroXangle = 0.0
-gyroYangle = 0.0
-gyroZangle = 0.0
-CFangleX = 0.0
-CFangleY = 0.0
-
-
-IMU.detectIMU()     #Detect if BerryIMU is connected.
-if(IMU.BerryIMUversion == 99):
+    IMU.detectIMU()     #Detect if BerryIMU is connected.
+    if(IMU.BerryIMUversion == 99):
     print(" No BerryIMU found... exiting ")
     sys.exit()
-IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
+    IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
+
+    RAD_TO_DEG = 57.29578
+    M_PI = 3.14159265358979323846
+    G_GAIN = 0.070  # [deg/s/LSB]  If you change the dps for gyro, you need to update this value accordingly
+    AA =  0.40      # Complementary filter constant
+
+    ################# Compass Calibration values ############
+    # Use calibrateBerryIMU.py to get calibration values
+    # Calibrating the compass isnt mandatory, however a calibrated
+    # compass will result in a more accurate heading values.
+
+    magXmin =  0
+    magYmin =  0
+    magZmin =  0
+    magXmax =  0
+    magYmax =  0
+    magZmax =  0
 
 
-a = datetime.datetime.now()
+
+    '''
+    Here is an example:
+    magXmin =  -1748
+    magYmin =  -1025
+    magZmin =  -1876
+    magXmax =  959
+    magYmax =  1651
+    magZmax =  708
+    Dont use the above values, these are just an example.
+    '''
+    ############### END Calibration offsets #################
 
 
 
-while True:
+    gyroXangle = 0.0
+    gyroYangle = 0.0
+    gyroZangle = 0.0
+    CFangleX = 0.0
+    CFangleY = 0.0
+
+    a = datetime.datetime.now()
+
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
     ACCy = IMU.readACCy()
@@ -177,22 +181,22 @@ while True:
     ##################### END Tilt Compensation ########################
 
 
-    if 1:                       #Change to '0' to stop showing the angles from the accelerometer
+    if msg:                       #Change to '0' to stop showing the angles from the accelerometer
         outputString += "#  ACCX Angle %5.2f ACCY Angle %5.2f  #  " % (AccXangle, AccYangle)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the gyro
+    if msg:                       #Change to '0' to stop  showing the angles from the gyro
         outputString +="\t# GRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the complementary filter
+    if msg:                       #Change to '0' to stop  showing the angles from the complementary filter
         outputString +="\t#  CFangleX Angle %5.2f   CFangleY Angle %5.2f  #" % (CFangleX,CFangleY)
 
-    if 1:                       #Change to '0' to stop  showing the heading
+    if msg:                       #Change to '0' to stop  showing the heading
         outputString +="\t# HEADING %5.2f  tiltCompensatedHeading %5.2f #" % (heading,tiltCompensatedHeading)
 
 
     print(outputString)
 
-
+    return (heading, tiltCompensatedHeading, (AccXangle, AccYangle), (gyroXangle, gyroYangle, gyroZangle), (CFangleX, CFangleY))
 
     #slow program down a bit, makes the output more readable
-    time.sleep(0.03)
+    #time.sleep(0.03)
