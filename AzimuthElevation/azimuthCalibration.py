@@ -322,28 +322,19 @@ def calibrateMag(angleIncrement = 45):
     return ([magXmin, magYmin, magZmin],[magXmax, magYmax, magZmax])
 
 #TODO: swap delay for a check of serial command TURNDONE            
-def turnAZ(ser, deg, wait = True, numBytes = 10):
+def turnAZ(ser, deg, sleepTime = 5):
     """Pass a serial object and desired number of degrees to turn the azimuth motor.
     The angle must be positive.
     """
     ser.write("AZ{}".format(float(deg)).encode())
+    time.sleep(sleepTime)
     
-    if wait == True:
-        while True:
-            serRead = ser.read(numBytes); print(serRead)
-            if serRead == b"TURNDONE":
-                break
-
-def turnEL(ser, deg, wait = True, numBytes = 10):
+def turnEL(ser, deg, sleepTime = 5):
     """Pass a serial object and desired number of degrees to turn the elevation motor.
     The angle must be positive.
     """
     ser.write("EL{}".format(float(deg)).encode())
-    
-    if wait == True:
-        while True:
-            if ser.read(numBytes) == b"TURNDONE":
-                break
+    time.sleep(sleepTime)
 
 def sendZeroAZ(ser, deg, sleepTime = 5):
     """Pass a serial object and the angle at which the azimuth is zeroed (points north).
